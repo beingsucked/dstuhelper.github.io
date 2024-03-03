@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DSTUHelper Maps</title>
-	<link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
     <script src="https://api-maps.yandex.ru/2.1/?apikey=ваш_API_ключ&lang=ru_RU" type="text/javascript"></script>
     <style>
         html, body, #map {
@@ -25,11 +25,11 @@
             background-color: #ffffff;
             border: 1px solid #cccccc;
             border-radius: 4px;
-            padding: 10px 20px;
-            margin-bottom: 10px;
+            padding: 5px 10px; /* уменьшаем отступы */
+            margin-bottom: 5px; /* уменьшаем отступы */
             cursor: pointer;
             font-family: Arial, sans-serif;
-            font-size: 14px;
+            font-size: 12px; /* уменьшаем размер текста */
             color: #333333;
             text-align: center;
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -39,10 +39,15 @@
             background-color: #f0f0f0;
             color: #000000;
         }
+
+        .hidden {
+            display: none; /* скрываем кнопки */
+        }
     </style>
 </head>
 <body>
     <div id="map"></div>
+    <div id="controls-container"></div>
 
     <script>
         ymaps.ready(init);
@@ -82,6 +87,7 @@
                 });
                 myPlacemark.events.add('click', function () {
                     myMap.balloon.open(coords, myPlacemark.properties.get('balloonContent'));
+                    hideButtons(); // Скрываем кнопки при открытии метки
                 });
 
                 // Добавляем к метке текст с именем
@@ -153,7 +159,17 @@
                 button.textContent = content;
                 return button;
             }
+
+            // Функция для скрытия кнопок
+            function hideButtons() {
+                controlsContainer.classList.add('hidden');
+            }
+
+            // Обработчик события закрытия балуна метки
+            myMap.events.add('balloonclose', function () {
+                controlsContainer.classList.remove('hidden');
+            });
         }
     </script>
-
-    <div id="controls-container"></div>
+</body>
+</html>
