@@ -1,0 +1,46 @@
+
+    <!DOCTYPE html>
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://telegram.org/js/telegram-web-app.js"></script>
+        <title>Yandex Maps Integration</title>
+        <script src="https://api-maps.yandex.ru/2.1/?apikey=6b14860c-9ff4-4921-91f6-b06344e14d4a&lang=ru_RU" type="text/javascript"></script>
+        <style>
+            #map {
+                width: 100%;
+                height: 600px;
+                margin: 0 auto;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                ymaps.ready(initMap);
+            });
+
+            function initMap() {
+                var myMap = new ymaps.Map("map", {
+                    center: [47.222078, 39.720358],
+                    zoom: 10
+                });
+
+                var points = [
+                    
+                ];
+
+                points.forEach(function (point) {
+                    var marker = new ymaps.Placemark(point.coordinates, {
+                        balloonContent: '<div><img src="' + point.photo + '" style="width: 200px;                            height: auto;"><br>' + point.description + '<br>Разрушенность: ' + point.destruction + '%</div>'
+                    });
+                    myMap.geoObjects.add(marker);
+                });
+            }
+        </script>
+    </body>
+    </html>
+    
