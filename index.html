@@ -1,46 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSTUHelper Maps</title>
+	<link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=ваш_API_ключ&lang=ru_RU" type="text/javascript"></script>
+    <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
 
-    <!DOCTYPE html>
-    <html lang="ru">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="https://telegram.org/js/telegram-web-app.js"></script>
-        <title>Yandex Maps Integration</title>
-        <script src="https://api-maps.yandex.ru/2.1/?apikey=6b14860c-9ff4-4921-91f6-b06344e14d4a&lang=ru_RU" type="text/javascript"></script>
-        <style>
-            #map {
-                width: 100%;
-                height: 600px;
-                margin: 0 auto;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="map"></div>
+        #controls-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
 
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                ymaps.ready(initMap);
+        .custom-button {
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #333333;
+            text-align: center;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .custom-button:hover {
+            background-color: #f0f0f0;
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script>
+        ymaps.ready(init);
+
+        function init() {
+            var myMap = new ymaps.Map('map', {
+                center: [47.240328, 39.736707], // Координаты центра карты
+                zoom: 13.4, // Zoom
+                controls: [] // Убираем все кнопки управления с карты
             });
 
-            function initMap() {
-                var myMap = new ymaps.Map("map", {
-                    center: [47.222078, 39.720358],
-                    zoom: 10
+            // Создаем кнопки приближения и отдаления
+            var zoomControl = new ymaps.control.ZoomControl({
+                options: {
+                    size: 'small',
+                    position: {
+                        top: 10,
+                        left: 10
+                    }
+                }
+            });
+
+            // Добавляем кнопки приближения и отдаления на карту
+            myMap.controls.add(zoomControl);
+
+            // Создаем коллекцию для точек
+            var myCollection = new ymaps.GeoObjectCollection();
+
+            // Функция для добавления точки
+            function addPoint(coords, name, description, imageUrl) {
+                var myPlacemark = new ymaps.Placemark(coords, {
+                    hintContent: name,
+                    balloonContent: '<h3>' + name + '</h3><p>' + description + '</p><img src="' + imageUrl + '" alt="' + name + '">'
+                }, {
+                    preset: 'islands#redDotIconWithCaption', // Подпись у точек
+                    iconCaption: name // Устанавливаем подпись иконки равной имени точки
+                });
+                myPlacemark.events.add('click', function () {
+                    myMap.balloon.open(coords, myPlacemark.properties.get('balloonContent'));
                 });
 
-                var points = [
-                    
-                ];
+                // Добавляем к метке текст с именем
+                myPlacemark.properties.set('iconCaption', name);
 
-                points.forEach(function (point) {
-                    var marker = new ymaps.Placemark(point.coordinates, {
-                        balloonContent: '<div><img src="' + point.photo + '" style="width: 200px;                            height: auto;"><br>' + point.description + '<br>Разрушенность: ' + point.destruction + '%</div>'
-                    });
-                    myMap.geoObjects.add(marker);
-                });
+                myCollection.add(myPlacemark);
             }
-        </script>
-    </body>
-    </html>
-    
+
+            // Главный корпус 47.238325, 39.711429
+            addPoint([47.237162, 39.712343], "Корпус №1", "Синим цветом отмечен вход.", "img/campus_1.jpg");
+            addPoint([47.238501, 39.713108], "Корпус №2", "Зеленым цветом отмечен вход", "img/campus_2.jpg");
+            addPoint([47.238008, 39.711012], "Корпус №8", "Синим цветом отмечен вход.", "img/campus_8.jpg");
+            addPoint([47.240809, 39.709378], "Манеж", "Зеленым цветом отмечен вход", "img/campus_manezh.jpg");
+            addPoint([47.238442, 39.709984], "Корпус №4", "Синим цветом отмечен вход.<br>У корпусов № 3, 4 и 5 общий вход", "img/campus_3_4_5.jpg");
+            addPoint([47.238058, 39.710131], "Корпус №3", "Синим цветом отмечен вход.<br>У корпусов № 3, 4 и 5 общий вход", "img/campus_3_4_5.jpg");
+            addPoint([47.238105, 39.709092], "Корпус №5", "Синим цветом отмечен вход.<br>У корпусов № 3, 4 и 5 общий вход", "img/campus_3_4_5.jpg");
+            addPoint([47.238330, 39.712177], "Корпус №7", "Если у вас есть фотография входа, то напишите в 'Помощь'");
+            addPoint([47.238879, 39.712263], "Корпус №6", "Если у вас есть фотография входа, то напишите в 'Помощь'");
+            addPoint([47.237649, 39.712031], "Конгресс-холл", "Зеленым цветом отмечен вход", "img/campus_holl.jpg");
+
+            // Кампус на социалистической 47.223584, 39.733233
+            addPoint([47.223874, 39.732202], "Корпус №21", "Зеленым цветом отмечен вход", "img/campus_21.jpg");
+            addPoint([47.223461, 39.734736], "Корпус №25", "Зеленым цветом отмечен вход", "img/campus_25.jpg");
+            addPoint([47.223304, 39.731821], "Корпус №22", "Если у вас есть фотография входа, то напишите в 'Помощь'");
+            addPoint([47.223052, 39.732244], "Корпус №23", "Если у вас есть фотография входа, то напишите в 'Помощь'");
+            addPoint([47.223553, 39.733024], "Корпус №26", "Если у вас есть фотография входа, то напишите в 'Помощь'");
+            addPoint([47.223189, 39.733144], "Корпус №24", "Если у вас есть фотография входа, то напишите в 'Помощь'");
+
+            // 10 корпус 47.249264, 39.757583
+            addPoint([47.249264, 39.757583], "Корпус №10", "Зеленым цветом отмечен вход", "img/campus_10.jpg");
+
+            // Кампус на Шапавалова 47.251313, 39.653694
+            addPoint([47.251313, 39.653694], "Кампус на Шапавалова", "Если у вас есть фотография входа, то напишите в 'Помощь'");
+
+            // Добавляем коллекцию точек на карту
+            myMap.geoObjects.add(myCollection);
+
+            // Создаем кнопки для перехода к различным корпусам
+            var mainCampusButton = createCustomButton('Главный корпус');
+            var socialistCampusButton = createCustomButton('Социалистическая');
+            var campus10Button = createCustomButton('Кампус №10');
+            var shapavalovaCampusButton = createCustomButton('Шапавалова');
+
+            // Добавляем кнопки на карту
+            var controlsContainer = document.getElementById('controls-container');
+            controlsContainer.appendChild(mainCampusButton);
+            controlsContainer.appendChild(socialistCampusButton);
+            controlsContainer.appendChild(campus10Button);
+            controlsContainer.appendChild(shapavalovaCampusButton);
+
+            // Обработчики событий для кнопок
+            mainCampusButton.addEventListener('click', function () {
+                myMap.setCenter([47.238325, 39.711429], 16);
+            });
+            socialistCampusButton.addEventListener('click', function () {
+                myMap.setCenter([47.223584, 39.733233], 16);
+            });
+            campus10Button.addEventListener('click', function () {
+                myMap.setCenter([47.249264, 39.757583], 16);
+            });
+            shapavalovaCampusButton.addEventListener('click', function () {
+                myMap.setCenter([47.251313, 39.653694], 16);
+            });
+
+            // Функция для создания кастомной кнопки
+            function createCustomButton(content) {
+                var button = document.createElement('div');
+                button.className = 'custom-button';
+                button.textContent = content;
+                return button;
+            }
+        }
+    </script>
+
+    <div id="controls-container"></div>
