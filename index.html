@@ -120,8 +120,8 @@
             // 10 корпус 47.249264, 39.757583
             addPoint([47.249264, 39.757583], "Корпус №10", "Зеленым цветом отмечен вход", "img/campus_10.jpg");
 
-            // Кампус на Шапавалова 47.251313, 39.653694
-            addPoint([47.251313, 39.653694], "Кампус на Шапавалова", "Если у вас есть фотография входа, то напишите в 'Помощь'");
+            // Кампус на Шаповалова 47.251313, 39.653694
+            addPoint([47.251313, 39.653694], "Кампус на Шаповалова", "Если у вас есть фотография входа, то напишите в 'Помощь'");
 
             // Добавляем коллекцию точек на карту
             myMap.geoObjects.add(myCollection);
@@ -130,14 +130,14 @@
             var mainCampusButton = createCustomButton('Главный корпус');
             var socialistCampusButton = createCustomButton('Социалистическая');
             var campus10Button = createCustomButton('Кампус №10');
-            var shapavalovaCampusButton = createCustomButton('Шапавалова');
+            var shapovalovaCampusButton = createCustomButton('Шаповалова');
 
             // Добавляем кнопки на карту
             var controlsContainer = document.getElementById('controls-container');
             controlsContainer.appendChild(mainCampusButton);
             controlsContainer.appendChild(socialistCampusButton);
             controlsContainer.appendChild(campus10Button);
-            controlsContainer.appendChild(shapavalovaCampusButton);
+            controlsContainer.appendChild(shapovalovaCampusButton);
 
             // Обработчики событий для кнопок
             mainCampusButton.addEventListener('click', function () {
@@ -149,7 +149,7 @@
             campus10Button.addEventListener('click', function () {
                 myMap.setCenter([47.249264, 39.757583], 16);
             });
-            shapavalovaCampusButton.addEventListener('click', function () {
+            shapovalovaCampusButton.addEventListener('click', function () {
                 myMap.setCenter([47.251313, 39.653694], 16);
             });
 
